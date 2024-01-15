@@ -64,3 +64,75 @@ const images = [
   },
 ];
 
+// Вибір контейнера для галереї
+
+const galleryContainer = document.querySelector('.gallery');
+
+// Генерація розмітки галереї
+
+const galleryItems = images.map(({ preview, original, description }) => `
+  <li class="gallery-item">
+    <a class="gallery-link" href="${original}" onclick="event.preventDefault();">
+      <img
+        class="gallery-image"
+        src="${preview}"
+        data-source="${original}"
+        alt="${description}"
+      />
+    </a>
+  </li>
+`).join('');
+
+// Вставка розмітки у контейнер
+
+galleryContainer.innerHTML = galleryItems;
+
+// Ініціалізація змінної для екземпляру basicLightbox
+let lightboxInstance = null;
+
+// Додавання слухача подій на кліки у контейнері галереї
+galleryContainer.addEventListener('click', onGalleryClick);
+
+function onGalleryClick(event) {
+    // Запобігання стандартній обробці кліку
+    event.preventDefault();
+
+    // Перевірка, чи клік був здійснений на зображенні
+    if (event.target.nodeName !== 'IMG') {
+      return;
+    }
+  
+    // Отримання адреси зображення
+    const imageSrc = event.target.dataset.source;
+  
+    // Перевірка, чи існує екземпляр lightbox
+    if (!lightboxInstance) {
+        // Створення нового екземпляру lightbox, якщо він ще не був створений
+        lightboxInstance = basicLightbox.create(`
+          <img src="${imageSrc}" width="800" height="600">
+        `, {
+            // Додавання слухача подій для клавіші Escape при відкритті
+            onShow: (instance) => {
+                document.addEventListener('keydown', onKeydown);
+            },
+            // Видалення слухача подій для клавіші Escape при закритті
+            onClose: (instance) => {
+                document.removeEventListener('keydown', onKeydown);
+            }
+        });
+    } else {
+        // Оновлення вмісту існуючого екземпляру lightbox
+        lightboxInstance.element().querySelector('img').src = imageSrc;
+    }
+
+    // Показ екземпляру lightbox
+    lightboxInstance.show();
+}
+
+// Функція для обробки натискання клавіш
+function onKeydown(event) {
+    // Закриття lightbox при натисканні клавіші Escape
+if (event.key === 'Escape' && lightboxInstance) {
+  lightboxInstance.close();
+  }
+  }
