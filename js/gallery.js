@@ -98,10 +98,10 @@ function onGalleryClick(event) {
     lightboxInstance = basicLightbox.create(`
           <img src="${imageSrc}" width="800" height="600">
         `, {
-      onShow: (instance) => {
+      onShow: () => {
         document.addEventListener('keydown', onKeydown);
       },
-      onClose: (instance) => {
+      onClose: () => {
         document.removeEventListener('keydown', onKeydown);
       }
     });
