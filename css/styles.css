@@ -21,9 +21,3 @@
 .gallery-item:hover .gallery-image {
   transform: scale(1.05);
 }
-
-@media (max-width: 768px) {
-  .gallery {
-    padding: 8px;
-  }
-}
